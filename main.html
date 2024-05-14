@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StayVista</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            height: 80px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .navlinks {
+            display: flex;
+            align-items: center;
+        }
+
+        .primary-btn {
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            text-transform: uppercase;
+        }
+
+        .primary-btn:hover {
+            background-color: #45a049;
+        }
+
+        .form-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            padding: 40px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .form-container h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .form-container select,
+        .form-container input[type="date"],
+        .form-container input[type="number"],
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-container select:focus,
+        .form-container input:focus,
+        .form-container button:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .form-container button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+
+        .date-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Align items horizontally */
+            margin-bottom: 20px;
+        }
+
+        .date-container input {
+            width: calc(50% - 5px); /* Set width for each input */
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .date-container span {
+            font-size: 16px; /* Adjust font size */
+            color: #777; /* Change color to gray */
+        }
+
+        .selection-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .selection-tabs button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+        }
+
+        .selection-tabs button.active {
+            background-color: #4CAF50;
+            color: #fff;
+            border-color: #4CAF50;
+        }
+
+        .selection-tabs button:hover {
+            background-color: #f0f0f0;
+        }
+
+        .selection-tabs button:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <a href="#" class="logo">StayVista</a>
+    <div class="navlinks">
+        <button class="primary-btn">Book Now</button>
+    </div>
+</header>
+<div class="form-container">
+    <h1>Where to?</h1>
+    <!-- Selection Tabs -->
+    <div class="selection-tabs">
+        <button id="hotelsTab" class="active" onclick="toggleSelection('hotels')">Hotels</button>
+        <button id="condosTab" onclick="toggleSelection('condos')">Condominiums</button>
+    </div>
+    <!-- Hotel Selection Form -->
+    <form id="hotelsForm" action="/hotel-search" method="get">
+        <select id="hotels" required>
+            <option disabled selected>Choose hotel</option>
+            <option value="Limketkai Luxe Hotel">Limketkai Luxe Hotel</option>
+            <option value="Seda Hotel">Seda Hotel</option>
+            <option value="TBD">TBD</option>
+        </select>
+        <div class="date-container">
+            <input type="date" id="checkin" required>
+            <span>-</span>
+            <input type="date" id="checkout" required>
+        </div>
+        <input type="number" id="travelers" placeholder="Number of travelers" min="1" required>
+        <button type="submit" id="searchHotel">Search</button>
+    </form>
+    <!-- Condominium Selection Form (Hidden by Default) -->
+    <form id="condosForm" action="/condo-search" method="get" style="display: none;">
+        <select id="condos" required>
+            <option disabled selected>Choose condominium</option>
+            <option value="Condo A">Condo A</option>
+            <option value="Condo B">Condo B</option>
+            <option value="TBD">TBD</option>
+        </select>
+        <div class="date-container">
+            <input type="date" id="checkin-condo" required>
+            <span>-</span>
+            <input type="date" id="checkout-condo" required>
+        </div>
+        <input type="number" id="travelers-condo" placeholder="Number of guests" min="1" required>
+        <button type="submit" id="searchCondo">Search</button>
+    </form>
+</div>
+
+<script>
+    // Function to toggle between hotel and condo selection
+    function toggleSelection(selection) {
+        if (selection === 'hotels') {
+            document.getElementById('hotelsTab').classList.add('active');
+            document.getElementById('condosTab').classList.remove('active');
+            document.getElementById('hotelsForm').style.display = 'block';
+            document.getElementById('condosForm').style.display = 'none';
+        } else {
+            document.getElementById('condosTab').classList.add('active');
+            document.getElementById('hotelsTab').classList.remove('active');
+            document.getElementById('condosForm').style.display = 'block';
+            document.getElementById('hotelsForm').style.display = 'none';
+        }
+    }
+
+    // Function to handle hotel search
+    document.getElementById('searchHotel').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+        var hotelName = document.getElementById('hotels').value;
+        // Redirect to new page with hotel information
+        window.location.href = '/hotel-pictures?hotel' + hotelName;
+    });
+
+    // Function to handle condo search
+    document.getElementById('searchCondo').addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent form submission
+        var condoName = document.getElementById('condos').value;
+        // Redirect to new page with condo information
+        window.location.href = '/condo-pictures?condo=' + condoName;
+    });
+</script>
+</body>
+</html>
